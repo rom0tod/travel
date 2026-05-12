@@ -7,6 +7,7 @@
     python main.py
 """
 import datetime
+import os
 from pathlib import Path
 
 from flask import (
@@ -62,6 +63,7 @@ def create_app(config_object: type = Config) -> Flask:
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
     db_session.global_init(app.config["DATABASE_URL"])
+    _maybe_auto_seed()
 
     _configure_login(app)
     _register_template_helpers(app)
@@ -70,6 +72,31 @@ def create_app(config_object: type = Config) -> Flask:
     _register_error_handlers(app)
 
     return app
+
+
+def _maybe_auto_seed() -> None:
+    """Заполняет пустую БД демо-данными, если включён флаг окружения.
+
+    Удобно для бесплатных хостингов вроде Render, где нет Shell-доступа
+    для ручного запуска ``python -m tools.seed``. Срабатывает только
+    при ``TRIPPLANNER_AUTO_SEED=1`` и только когда таблица пользователей
+    пуста — повторных вставок не будет.
+    """
+    if os.environ.get("TRIPPLANNER_AUTO_SEED", "").strip() != "1":
+        return
+    session = db_session.create_session()
+    try:
+        if session.query(User).count() > 0:
+            return
+    finally:
+        session.close()
+
+    from tools.seed import seed
+    try:
+        seed()
+    except Exception as exc:  # noqa: BLE001
+        # На старте не валим приложение — лучше пустая БД, чем 500.
+        print(f"[auto-seed] не удалось заполнить БД: {exc}")
 
 
 # ---------------------------------------------------------------------------
