@@ -1,0 +1,25 @@
+# Конфигурация для one-click деплоя на Render.com.
+# При создании Blueprint Render автоматически создаст веб-сервис
+# и привязанную базу PostgreSQL.
+services:
+  - type: web
+    name: tripplanner
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: TRIPPLANNER_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tripplanner-db
+          property: connectionString
+
+databases:
+  - name: tripplanner-db
+    plan: free
+    databaseName: tripplanner
+    user: tripplanner

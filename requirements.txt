@@ -9,3 +9,5 @@ email-validator>=2.0.0
 requests>=2.31.0
 werkzeug>=2.3.0
 Pillow>=10.0.0
+gunicorn>=21.2.0
+psycopg2-binary>=2.9.9
