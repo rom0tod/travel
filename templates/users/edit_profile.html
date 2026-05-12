@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Настройки — TripPlanner{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <h1 class="h3 mb-4">Настройки профиля</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3 text-center">
+                        {% if user.avatar %}
+                            <img src="{{ url_for('static',
+                                                 filename=user.avatar) }}"
+                                 alt="" class="rounded-circle avatar-lg mb-3">
+                        {% else %}
+                            <div class="avatar-placeholder
+                                        rounded-circle mx-auto mb-3">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.avatar.label(class="form-label") }}
+                        {{ form.avatar(class="form-control") }}
+                        {% for err in form.avatar.errors %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.about.label(class="form-label") }}
+                        {{ form.about(class="form-control", rows=5) }}
+                        {% for err in form.about.errors %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('user_profile',
+                                            user_id=user.id) }}"
+                           class="btn btn-outline-secondary">Отмена</a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

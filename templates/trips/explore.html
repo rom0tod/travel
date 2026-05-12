@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Explore — TripPlanner{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">Маршруты сообщества</h1>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-6">
+        {{ form.query(class="form-control",
+                      placeholder="Поиск по названию или направлению") }}
+    </div>
+    <div class="col-md-3">
+        {{ form.tag(class="form-control", placeholder="Тег") }}
+    </div>
+    <div class="col-md-3">
+        {{ form.submit(class="btn btn-primary w-100") }}
+    </div>
+</form>
+
+{% if popular_tags %}
+    <div class="mb-4">
+        <small class="text-muted me-2">Популярные теги:</small>
+        {% for tag in popular_tags %}
+            <a href="{{ url_for('explore', tag=tag.slug) }}"
+               class="badge bg-light text-dark text-decoration-none border me-1">
+                #{{ tag.name }}
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if trips %}
+    <div class="row g-4">
+        {% for trip in trips %}
+            {% include "trips/_card.html" %}
+        {% endfor %}
+    </div>
+
+    {% if total_pages > 1 %}
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% for p in range(1, total_pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link"
+                           href="{{ url_for('explore',
+                                            page=p,
+                                            query=form.query.data or '',
+                                            tag=form.tag.data or '') }}">
+                            {{ p }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">По запросу ничего не найдено.</div>
+{% endif %}
+{% endblock %}

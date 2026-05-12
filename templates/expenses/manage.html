@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Бюджет — {{ trip.title }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{{ url_for('trip_detail', trip_id=trip.id) }}">
+                {{ trip.title }}
+            </a>
+        </li>
+        <li class="breadcrumb-item active">Бюджет</li>
+    </ol>
+</nav>
+
+<h1 class="h3 mb-4">Бюджет поездки</h1>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small">Бюджет</div>
+                <div class="h4 mb-0">{{ "%.2f"|format(trip.budget or 0) }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small">Потрачено</div>
+                <div class="h4 mb-0 text-warning">
+                    {{ "%.2f"|format(trip.total_spent) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <div class="text-muted small">Остаток</div>
+                <div class="h4 mb-0
+                            {% if trip.is_over_budget %}text-danger
+                            {% else %}text-success{% endif %}">
+                    {{ "%.2f"|format(trip.budget_remaining) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Новый расход</h2>
+                <form method="post" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.category.label(class="form-label") }}
+                        {{ form.category(class="form-select") }}
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-7">
+                            {{ form.amount.label(class="form-label") }}
+                            {{ form.amount(class="form-control",
+                                           step="0.01") }}
+                            {% for err in form.amount.errors %}
+                                <div class="text-danger small">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-5">
+                            {{ form.currency.label(class="form-label") }}
+                            {{ form.currency(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3 mt-2">
+                        {{ form.spent_at.label(class="form-label") }}
+                        {{ form.spent_at(class="form-control", type="date") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.note.label(class="form-label") }}
+                        {{ form.note(class="form-control") }}
+                    </div>
+
+                    {{ form.submit(class="btn btn-primary w-100") }}
+                </form>
+            </div>
+        </div>
+
+        {% if by_category %}
+            <div class="card shadow-sm mt-3">
+                <div class="card-body">
+                    <h2 class="h6 mb-3">По категориям</h2>
+                    {% for category, total in by_category.items() %}
+                        <div class="d-flex justify-content-between">
+                            <span>{{ category | expense_label }}</span>
+                            <strong>{{ "%.2f"|format(total) }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 mb-3">История трат</h2>
+                {% if trip.expenses %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Категория</th>
+                                    <th>Сумма</th>
+                                    <th>Комментарий</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for expense in trip.expenses %}
+                                    <tr>
+                                        <td>{{ expense.spent_at | ru_date }}</td>
+                                        <td>
+                                            {{ expense.category | expense_label }}
+                                        </td>
+                                        <td>
+                                            {{ "%.2f"|format(expense.amount) }}
+                                            {{ expense.currency }}
+                                        </td>
+                                        <td>{{ expense.note }}</td>
+                                        <td class="text-end">
+                                            <form method="post"
+                                                  action="{{ url_for('delete_expense',
+                                                  trip_id=trip.id,
+                                                  expense_id=expense.id) }}">
+                                                <button class="btn btn-sm
+                                                               btn-outline-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">Расходов пока нет.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

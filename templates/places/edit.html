@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}
+    {% if place %}Редактирование точки{% else %}Новая точка{% endif %}
+    — {{ trip.title }}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('trip_detail', trip_id=trip.id) }}">
+                        {{ trip.title }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    {% if place %}{{ place.name }}{% else %}Новая точка{% endif %}
+                </li>
+            </ol>
+        </nav>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-4">
+                    {% if place %}Редактирование точки{% else %}
+                        Добавление точки маршрута
+                    {% endif %}
+                </h1>
+
+                <form method="post" novalidate id="placeForm">
+                    {{ form.hidden_tag() }}
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                            {% for err in form.name.errors %}
+                                <div class="text-danger small">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.kind.label(class="form-label") }}
+                            {{ form.kind(class="form-select") }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3 mt-3">
+                        {{ form.address.label(class="form-label") }}
+                        <div class="input-group">
+                            {{ form.address(class="form-control",
+                                            id="addressInput") }}
+                            <button class="btn btn-outline-secondary"
+                                    type="button" id="geocodeBtn">
+                                <i class="bi bi-search"></i> Найти на карте
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            Нажмите «Найти на карте» — координаты
+                            подставятся автоматически.
+                        </div>
+                        <div id="geocodeStatus" class="small mt-1"></div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            {{ form.day.label(class="form-label") }}
+                            {{ form.day(class="form-control", min=1,
+                                        max=trip.duration_days) }}
+                            <div class="form-text">
+                                Поездка длится {{ trip.duration_days }} дн.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.latitude.label(class="form-label") }}
+                            {{ form.latitude(class="form-control",
+                                             step="any", id="latInput") }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.longitude.label(class="form-label") }}
+                            {{ form.longitude(class="form-control",
+                                              step="any", id="lngInput") }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3 mt-3">
+                        {{ form.notes.label(class="form-label") }}
+                        {{ form.notes(class="form-control", rows=3) }}
+                    </div>
+
+                    <div id="placePickerMap" class="trip-map rounded-3 mb-3"></div>
+                    <p class="small text-muted">
+                        Клик по карте — координаты подставятся в поля.
+                    </p>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('trip_detail', trip_id=trip.id) }}"
+                           class="btn btn-outline-secondary">Отмена</a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script>
+    initPlacePicker({
+        mapId: "placePickerMap",
+        latInput: "latInput",
+        lngInput: "lngInput",
+        geocodeBtn: "geocodeBtn",
+        addressInput: "addressInput",
+        statusEl: "geocodeStatus"
+    });
+</script>
+{% endblock %}

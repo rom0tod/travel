@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}
+    {% if is_new %}Новая поездка{% else %}Редактирование «{{ trip.title }}»{% endif %}
+    — TripPlanner
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-4">
+                    {% if is_new %}
+                        Новая поездка
+                    {% else %}
+                        Редактирование поездки
+                    {% endif %}
+                </h1>
+
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label") }}
+                        {{ form.title(class="form-control") }}
+                        {% for err in form.title.errors %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.destination.label(class="form-label") }}
+                        {{ form.destination(class="form-control",
+                                            placeholder="Например, Тбилиси, Грузия") }}
+                        {% for err in form.destination.errors %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows=4) }}
+                        {% for err in form.description.errors %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            {{ form.start_date.label(class="form-label") }}
+                            {{ form.start_date(class="form-control",
+                                               type="date") }}
+                            {% for err in form.start_date.errors %}
+                                <div class="text-danger small">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.end_date.label(class="form-label") }}
+                            {{ form.end_date(class="form-control",
+                                             type="date") }}
+                            {% for err in form.end_date.errors %}
+                                <div class="text-danger small">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.budget.label(class="form-label") }}
+                            {{ form.budget(class="form-control",
+                                           step="0.01") }}
+                            {% for err in form.budget.errors %}
+                                <div class="text-danger small">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3 mt-3">
+                        {{ form.tags.label(class="form-label") }}
+                        {{ form.tags(class="form-control",
+                                     placeholder="горы, осень, роуд-трип") }}
+                        <div class="form-text">{{ form.tags.description }}</div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.cover_image.label(class="form-label") }}
+                        {{ form.cover_image(class="form-control") }}
+                        {% for err in form.cover_image.errors %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                        {% if trip and trip.cover_image %}
+                            <div class="form-text">
+                                Сейчас:
+                                <a href="{{ url_for('static',
+                                                    filename=trip.cover_image) }}"
+                                   target="_blank">
+                                    посмотреть текущую обложку
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-check mb-4">
+                        {{ form.is_public(class="form-check-input") }}
+                        {{ form.is_public.label(class="form-check-label") }}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('my_trips') }}"
+                           class="btn btn-outline-secondary">Отмена</a>
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

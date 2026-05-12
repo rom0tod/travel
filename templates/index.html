@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}TripPlanner — планируй путешествия осознанно{% endblock %}
+
+{% block content %}
+<section class="hero rounded-4 p-5 mb-5 text-white shadow-sm">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <h1 class="display-5 fw-bold mb-3">
+                Соберите путешествие по точкам — и поделитесь маршрутом
+            </h1>
+            <p class="lead mb-4">
+                Создавайте маршруты с картой, расписанием по дням и трекером
+                бюджета. Делитесь готовыми поездками с друзьями или с миром.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('create_trip') }}"
+                       class="btn btn-light btn-lg fw-semibold">
+                        <i class="bi bi-plus-circle"></i> Создать поездку
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('register') }}"
+                       class="btn btn-light btn-lg fw-semibold">
+                        Начать бесплатно
+                    </a>
+                {% endif %}
+                <a href="{{ url_for('explore') }}"
+                   class="btn btn-outline-light btn-lg">
+                    Смотреть чужие маршруты
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block text-end">
+            <i class="bi bi-geo-alt-fill display-1 opacity-50"></i>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="row text-center g-3">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="display-6 fw-bold">{{ stats.users }}</div>
+                <div class="text-muted">путешественников</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="display-6 fw-bold">{{ stats.trips }}</div>
+                <div class="text-muted">маршрутов</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="display-6 fw-bold">{{ stats.places }}</div>
+                <div class="text-muted">точек на карте</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <h2 class="h3 mb-4">Свежие публичные маршруты</h2>
+    {% if featured %}
+        <div class="row g-4">
+            {% for trip in featured %}
+                {% include "trips/_card.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Пока никто не делился публичными маршрутами. Будьте первыми!
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,144 @@
+/* TripPlanner — основные стили. */
+
+:root {
+    --tp-primary: #2563eb;
+    --tp-primary-dark: #1e40af;
+    --tp-bg: #f5f7fb;
+    --tp-card-bg: #ffffff;
+    --tp-text: #1f2937;
+    --tp-muted: #6b7280;
+    --tp-border: #e5e7eb;
+}
+
+body {
+    background-color: var(--tp-bg);
+    color: var(--tp-text);
+    font-family: "Segoe UI", "Inter", Arial, sans-serif;
+}
+
+.bg-primary {
+    background-color: var(--tp-primary) !important;
+}
+
+a {
+    color: var(--tp-primary);
+}
+
+a:hover {
+    color: var(--tp-primary-dark);
+}
+
+/* -- Hero на главной -- */
+.hero {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+}
+
+/* -- Карточки поездок -- */
+.trip-card {
+    background-color: var(--tp-card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    border: 1px solid var(--tp-border);
+}
+
+.trip-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+}
+
+.trip-cover {
+    background: linear-gradient(135deg, #94a3b8, #475569);
+    background-size: cover;
+    background-position: center;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.trip-card-days {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* -- Hero страницы поездки -- */
+.trip-hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 100%);
+    background-size: cover;
+    background-position: center;
+}
+
+/* -- Карта -- */
+.trip-map {
+    height: 360px;
+    width: 100%;
+    border: 1px solid var(--tp-border);
+}
+
+/* -- Статистика главной -- */
+.stat-card {
+    background: var(--tp-card-bg);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--tp-border);
+    height: 100%;
+}
+
+/* -- Комментарии -- */
+.comment-card {
+    background: var(--tp-card-bg);
+    border: 1px solid var(--tp-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+/* -- Профиль -- */
+.avatar-lg {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border: 4px solid var(--tp-card-bg);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.avatar-placeholder {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e2e8f0;
+    color: #64748b;
+    font-size: 4rem;
+}
+
+/* -- Бейджи маркеров на карте -- */
+.tp-marker-label {
+    background: var(--tp-primary);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* -- Адаптив для мелких экранов -- */
+@media (max-width: 768px) {
+    .trip-hero {
+        padding: 24px !important;
+    }
+
+    .avatar-lg,
+    .avatar-placeholder {
+        width: 96px;
+        height: 96px;
+        font-size: 3rem;
+    }
+}

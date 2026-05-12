@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+
+# Виртуальные окружения
+venv/
+env/
+.venv/
+
+# База данных и пользовательские загрузки
+db/*.sqlite
+db/*.sqlite3
+db/*.db
+static/uploads/
+
+# IDE и редакторы
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Окружение
+.env
+.env.local
+
+# Логи
+*.log
