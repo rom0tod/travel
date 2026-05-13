@@ -218,7 +218,7 @@ def add_horizontal_rule(doc: Document) -> None:
 
 @dataclass
 class Author:
-    fio: str = "Роман Тодоров"
+    fio: str = "Роман Тодор"
     course: str = "Яндекс Лицей · «Основы промышленного программирования»"
     module: str = "WebServer + REST API"
     year: str = "2026"

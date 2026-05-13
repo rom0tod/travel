@@ -192,7 +192,7 @@ def slide_title(prs):
     # Автор
     add_text(
         slide, Inches(1.0), Inches(5.6), Inches(11), Inches(0.5),
-        "Автор: Роман Тодоров",
+        "Автор: Роман Тодор",
         font=BODY_FONT, size=18, bold=True, color=WHITE,
     )
     add_text(
@@ -1015,7 +1015,7 @@ def slide_thanks(prs):
 
     add_text(
         slide, Inches(1.0), Inches(6.75), Inches(12), Inches(0.4),
-        "Роман Тодоров · Яндекс Лицей · 2026",
+        "Роман Тодор · Яндекс Лицей · 2026",
         size=12, color=RGBColor(0x94, 0xA3, 0xB8),
     )
 
